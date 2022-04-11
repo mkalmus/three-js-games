@@ -3,6 +3,10 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'dat.gui'
 
+//Texture Loading
+const textureLoader = new THREE.TextureLoader()
+const normalTexture = textureLoader.load('/textures/NormalMap.png')
+
 // Debug
 const gui = new dat.GUI()
 
@@ -13,12 +17,16 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 // Objects
-const geometry = new THREE.SphereGeometry(.5, 64, 64)
+const geometry = new THREE.SphereBufferGeometry(.5, 64, 64)
 
 // Materials
 
-const material = new THREE.MeshBasicMaterial()
-material.color = new THREE.Color(0xff0000)
+//can also define in the material constructor
+const material = new THREE.MeshStandardMaterial()
+material.metalness = 0.5
+material.roughness = 0.2
+material.normalMap = normalTexture
+material.color = new THREE.Color(0x292929)
 
 // Mesh
 const sphere = new THREE.Mesh(geometry, material)
@@ -26,12 +34,17 @@ scene.add(sphere)
 
 // Lights
 
-const pointLight = new THREE.PointLight(0xffffff, 0.1)
-pointLight.position.x = 2
-pointLight.position.y = 3
-pointLight.position.z = 4
+const pointLight = new THREE.PointLight(0xffffff, 2, 100)
+pointLight.position.set(1, 1, 1)
+pointLight.intensity = 3
 scene.add(pointLight)
+gui.add(pointLight.position, 'y').min(-3).max(3).step(0.01)
 
+const pointLight2 = new THREE.PointLight(0xff0000, 2, 100)
+pointLight2.position.set(1, 1, 1)
+pointLight2.intensity = 3
+scene.add(pointLight2)
+gui.add(pointLight2.position, 'y').min(-3).max(3).step(0.01)
 /**
  * Sizes
  */
