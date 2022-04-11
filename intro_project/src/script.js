@@ -34,17 +34,49 @@ scene.add(sphere)
 
 // Lights
 
+//point light 1
 const pointLight = new THREE.PointLight(0xffffff, 2, 100)
 pointLight.position.set(1, 1, 1)
 pointLight.intensity = 3
 scene.add(pointLight)
-gui.add(pointLight.position, 'y').min(-3).max(3).step(0.01)
 
+const light1 = gui.addFolder('Light1')
+light1.add(pointLight.position, 'x').min(-3).max(3).step(0.01)
+light1.add(pointLight.position, 'y').min(-3).max(3).step(0.01)
+light1.add(pointLight.position, 'z').min(-3).max(3).step(0.01)
+
+//helper for point light 1
+const pointLightHelper1 = new THREE.PointLightHelper(pointLight, 1)
+scene.add(pointLightHelper1)
+
+
+//point light 2
 const pointLight2 = new THREE.PointLight(0xff0000, 2, 100)
 pointLight2.position.set(1, 1, 1)
 pointLight2.intensity = 3
 scene.add(pointLight2)
-gui.add(pointLight2.position, 'y').min(-3).max(3).step(0.01)
+const light2 = gui.addFolder('Light2')
+light2.add(pointLight2.position, 'x').min(-3).max(3).step(0.01)
+light2.add(pointLight2.position, 'y').min(-3).max(3).step(0.01)
+light2.add(pointLight2.position, 'z').min(-3).max(3).step(0.01)
+
+//add helper for point light
+const pointLightHelper2 = new THREE.PointLightHelper(pointLight2, 1)
+scene.add(pointLightHelper2)
+
+//point light 3
+const pointLight3 = new THREE.PointLight(0xff0000, 2)
+pointLight3.position.set(-1.86, 1, -1.65)
+scene.add(pointLight3)
+
+
+const light2color = {
+    color: 0xff0000
+}
+
+light2.addColor(light2color, 'color').onChange(() => pointLight2.color.set(light2color.color))
+
+
 /**
  * Sizes
  */
@@ -94,14 +126,36 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
  * Animate
  */
 
+document.addEventListener('mousemove', onDocumentMouseMove)
+let mouseX = 0
+let mouseY = 0
+
+let targetX = 0
+let targetY = 0
+
+const windowHalfX = window.innerWidth / 2
+const windowHalfY = window.innerHeight / 2
+
+function onDocumentMouseMove(event) {
+    mouseX = (event.clientX - windowHalfX)
+    mouseY = (event.clientY - windowHalfY)
+}
+
 const clock = new THREE.Clock()
 
 const tick = () => {
 
+    targetX = mouseX * 0.001
+    targetY = mouseY * 0.001
+
     const elapsedTime = clock.getElapsedTime()
 
-    // Update objects
+    // Update objects -- constant movement
     sphere.rotation.y = .5 * elapsedTime
+
+    sphere.rotation.y += .5 * (targetX - sphere.rotation.y)
+    sphere.rotation.x += .05 * (targetY - sphere.rotation.x)
+    sphere.rotation.z += .05 * (targetY - sphere.rotation.x)
 
     // Update Orbital Controls
     // controls.update()
