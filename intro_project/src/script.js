@@ -5,7 +5,7 @@ import * as dat from 'dat.gui'
 
 //Texture Loading
 const textureLoader = new THREE.TextureLoader()
-const normalTexture = textureLoader.load('/textures/NormalMap.png')
+const normalTexture = textureLoader.load('/textures/151_norm.JPG')
 
 // Debug
 const gui = new dat.GUI()
@@ -17,7 +17,7 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 // Objects
-const geometry = new THREE.SphereBufferGeometry(.5, 64, 64)
+const geometry = new THREE.SphereBufferGeometry(.3, 64, 64)
 
 // Materials
 
@@ -30,7 +30,12 @@ material.color = new THREE.Color(0x292929)
 
 // Mesh
 const sphere = new THREE.Mesh(geometry, material)
+const sphere2 = new THREE.Mesh(geometry, material)
+//add first sphere
 scene.add(sphere)
+//add second sphere
+sphere2.position.x += 1
+scene.add(sphere2)
 
 // Lights
 
@@ -117,7 +122,8 @@ scene.add(camera)
  * Renderer
  */
 const renderer = new THREE.WebGLRenderer({
-    canvas: canvas
+    canvas: canvas,
+    alpha: true
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
@@ -126,6 +132,8 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
  * Animate
  */
 
+
+//rotate when we move the mouse
 document.addEventListener('mousemove', onDocumentMouseMove)
 let mouseX = 0
 let mouseY = 0
@@ -139,6 +147,10 @@ const windowHalfY = window.innerHeight / 2
 function onDocumentMouseMove(event) {
     mouseX = (event.clientX - windowHalfX)
     mouseY = (event.clientY - windowHalfY)
+}
+
+const updateSphere = (event) => {
+    sphere.position.y = window.scrollY * 0.001
 }
 
 const clock = new THREE.Clock()
@@ -155,7 +167,7 @@ const tick = () => {
 
     sphere.rotation.y += .5 * (targetX - sphere.rotation.y)
     sphere.rotation.x += .05 * (targetY - sphere.rotation.x)
-    sphere.rotation.z += .05 * (targetY - sphere.rotation.x)
+    sphere.position.z += .05 * (targetY - sphere.rotation.x)
 
     // Update Orbital Controls
     // controls.update()
