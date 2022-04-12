@@ -5,7 +5,7 @@ import * as dat from 'dat.gui'
 
 //Texture Loading
 const textureLoader = new THREE.TextureLoader()
-const normalTexture = textureLoader.load('/textures/151_norm.JPG')
+const normalTexture = textureLoader.load('/textures/172_norm.JPG')
 
 // Debug
 const gui = new dat.GUI()
